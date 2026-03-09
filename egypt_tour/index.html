@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тур в Гизу — Египет</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #E8C97A;
+    --sand-light: #F5E4B0;
+    --sand-pale: #FDF5DC;
+    --orange: #D4631A;
+    --orange-deep: #B84E0E;
+    --yellow: #F0B429;
+    --yellow-bright: #FFD060;
+    --dark: #1A100A;
+    --dark-mid: #2E1C0E;
+    --papyrus: #F9EED0;
+    --glyph: #C8962A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--papyrus);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── STARS ── */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--yellow-bright);
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle var(--d, 4s) var(--delay, 0s) infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: var(--op, 0.7); transform: scale(1.2); }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 80%, rgba(212,99,26,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(240,180,41,0.2) 0%, transparent 60%);
+    z-index: -1;
+  }
+
+  /* Pyramids SVG background */
+  .pyramids-bg {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 55%;
+    z-index: -1;
+    opacity: 0.18;
+  }
+
+  .hieroglyphs-border {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    letter-spacing: 0.4em;
+    color: var(--glyph);
+    opacity: 0.55;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: scrollGlyphs 20s linear infinite;
+  }
+  @keyframes scrollGlyphs {
+    0% { transform: translateX(15%); }
+    100% { transform: translateX(-15%); }
+  }
+
+  .hero-eye {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: floatEye 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px var(--yellow));
+    color: var(--yellow);
+  }
+  @keyframes floatEye {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(2.4rem, 7vw, 6rem);
+    font-weight: 900;
+    color: var(--yellow-bright);
+    text-shadow:
+      0 0 40px rgba(240,180,41,0.7),
+      0 0 80px rgba(212,99,26,0.4),
+      4px 4px 0 var(--orange-deep);
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    animation: revealTitle 1.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  @keyframes revealTitle {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+    font-style: italic;
+    color: var(--sand-light);
+    margin: 1rem 0 2.5rem;
+    letter-spacing: 0.12em;
+    animation: revealTitle 1.4s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .scarab-divider {
+    font-size: 2rem;
+    color: var(--orange);
+    letter-spacing: 0.6em;
+    margin: 0.5rem 0 2rem;
+    animation: revealTitle 1.6s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .price-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, var(--orange-deep) 0%, var(--orange) 50%, var(--yellow) 100%);
+    border: 2px solid var(--yellow-bright);
+    border-radius: 4px;
+    padding: 1.2rem 2.8rem;
+    margin-bottom: 2.5rem;
+    box-shadow:
+      0 0 40px rgba(240,180,41,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.15);
+    animation: revealTitle 1.6s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+    position: relative;
+    overflow: hidden;
+  }
+  .price-badge::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(transparent 0deg, rgba(255,255,255,0.06) 60deg, transparent 120deg);
+    animation: rotatesheen 4s linear infinite;
+  }
+  @keyframes rotatesheen {
+    to { transform: rotate(360deg); }
+  }
+  .price-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dark);
+    opacity: 0.8;
+  }
+  .price-amount {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1;
+  }
+  .price-currency {
+    font-size: 0.9rem;
+    color: var(--dark);
+    opacity: 0.75;
+  }
+
+  .cta-btn {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    padding: 1rem 3rem;
+    background: transparent;
+    border: 2px solid var(--yellow);
+    color: var(--yellow);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s;
+    animation: revealTitle 1.8s 0.6s cubic-bezier(0.16,1,0.3,1) both;
+    text-transform: uppercase;
+  }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--yellow);
+    transform: translateX(-105%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    z-index: -1;
+  }
+  .cta-btn:hover { color: var(--dark); }
+  .cta-btn:hover::before { transform: translateX(0); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--sand);
+    opacity: 0.5;
+    animation: bounce 2.5s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── SAND WAVE ── */
+  .wave-sep {
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(to right, var(--dark) 0%, var(--orange-deep) 40%, var(--orange) 60%, var(--dark) 100%);
+    clip-path: polygon(0 100%, 10% 30%, 22% 70%, 35% 20%, 50% 65%, 65% 15%, 78% 55%, 90% 25%, 100% 60%, 100% 100%);
+    opacity: 0.3;
+    margin: 0;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-glyph {
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--glyph);
+    letter-spacing: 0.5em;
+    margin-bottom: 0.5rem;
+    opacity: 0.65;
+  }
+
+  .section-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.5rem, 4vw, 2.8rem);
+    color: var(--yellow-bright);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 30px rgba(240,180,41,0.3);
+  }
+
+  .section-line {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--orange), transparent);
+    margin: 1rem auto 3rem;
+  }
+
+  /* ── CARDS ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .card {
+    background: linear-gradient(145deg, rgba(46,28,14,0.85) 0%, rgba(26,16,10,0.95) 100%);
+    border: 1px solid rgba(200,150,42,0.3);
+    border-radius: 2px;
+    padding: 2rem 1.8rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .card.visible {
+    animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  @keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--orange-deep), var(--yellow), var(--orange-deep));
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(212,99,26,0.25), 0 0 0 1px rgba(200,150,42,0.4);
+  }
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .card-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: var(--yellow);
+    margin-bottom: 0.7rem;
+    letter-spacing: 0.05em;
+  }
+  .card-text {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--sand-light);
+    font-weight: 300;
+  }
+
+  /* ── PROGRAM ── */
+  .program-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .program-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: 1.5rem 1.8rem;
+    background: rgba(46,28,14,0.6);
+    border-left: 3px solid var(--orange);
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  .program-item.visible {
+    animation: slideIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .program-num {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4rem;
+    color: var(--orange);
+    min-width: 40px;
+    line-height: 1;
+  }
+  .program-content h3 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.95rem;
+    color: var(--yellow);
+    margin-bottom: 0.3rem;
+  }
+  .program-content p {
+    font-size: 1rem;
+    color: var(--sand-light);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* ── PHARAOH QUOTE ── */
+  .quote-block {
+    text-align: center;
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-block::before {
+    content: '𓂀';
+    position: absolute;
+    font-size: 15rem;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.04;
+    color: var(--yellow);
+    pointer-events: none;
+  }
+  .quote-text {
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    font-style: italic;
+    color: var(--sand-light);
+    line-height: 1.8;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    font-weight: 300;
+  }
+  .quote-author {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.8rem;
+    color: var(--orange);
+    letter-spacing: 0.3em;
+  }
+
+  /* ── PRICE SECTION ── */
+  .price-section {
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  .price-card {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(46,28,14,0.95) 0%, rgba(26,16,10,1) 100%);
+    border: 1px solid rgba(200,150,42,0.5);
+    padding: 3rem 5rem;
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+  }
+  .price-card::before, .price-card::after {
+    content: '𓆣';
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--orange);
+    opacity: 0.6;
+  }
+  .price-card::before { top: 1rem; left: 1.5rem; }
+  .price-card::after { bottom: 1rem; right: 1.5rem; }
+
+  .big-price {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-weight: 900;
+    color: var(--yellow-bright);
+    text-shadow: 0 0 40px rgba(240,180,41,0.5);
+    line-height: 1;
+    animation: pricePulse 3s ease-in-out infinite;
+  }
+  @keyframes pricePulse {
+    0%,100% { text-shadow: 0 0 40px rgba(240,180,41,0.5); }
+    50% { text-shadow: 0 0 70px rgba(240,180,41,0.9), 0 0 120px rgba(212,99,26,0.4); }
+  }
+  .price-desc {
+    font-size: 1.1rem;
+    color: var(--sand);
+    margin: 1rem 0 2rem;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .includes-list {
+    list-style: none;
+    text-align: left;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+  .includes-list li {
+    font-size: 0.95rem;
+    color: var(--sand-light);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .includes-list li::before {
+    content: '𓆙';
+    color: var(--orange);
+    font-size: 1rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(200,150,42,0.2);
+    text-align: center;
+    padding: 3rem 2rem;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-glyphs {
+    font-size: 2rem;
+    color: var(--glyph);
+    letter-spacing: 0.5em;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+  .footer-text {
+    font-size: 0.85rem;
+    color: var(--sand);
+    opacity: 0.5;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── FLOATING PARTICLES ── */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.2rem;
+    color: var(--yellow);
+    opacity: 0;
+    z-index: 0;
+    animation: floatUp var(--dur, 8s) var(--delay, 0s) linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.15; }
+    90% { opacity: 0.1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(26,16,10,0.9) 0%, transparent 100%);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: var(--yellow);
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 20px rgba(240,180,41,0.5);
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: var(--sand-light);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .price-card { padding: 2rem 2rem; }
+    section { padding: 4rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Floating hieroglyph particles -->
+<div id="particles"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">𓂀 Египет · Гиза</div>
+  <ul class="nav-links">
+    <li><a href="#sights">Достопримечательности</a></li>
+    <li><a href="#program">Программа</a></li>
+    <li><a href="#price">Цена</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hieroglyphs-border">𓀀 𓁀 𓂀 𓃀 𓄀 𓅀 𓆀 𓇀 𓈀 𓉀 𓊀 𓋀 𓌀 𓍀 𓎀 𓏀 𓐀 𓑀 𓒀 𓓀 𓔀 𓕀 𓖀 𓗀 𓘀 𓙀 𓚀 𓛀 𓜀 𓝀 𓞀 𓟀 𓠀 𓡀 𓢀 𓣀 𓤀 𓥀 𓦀 𓧀 𓨀 𓩀 𓪀</div>
+
+  <!-- SVG Pyramids -->
+  <svg class="pyramids-bg" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax meet">
+    <polygon points="600,30 820,380 380,380" fill="#D4631A"/>
+    <polygon points="900,80 1080,380 720,380" fill="#B84E0E"/>
+    <polygon points="300,110 460,380 140,380" fill="#B84E0E"/>
+    <polygon points="1050,120 1180,380 920,380" fill="#8A3A0A"/>
+    <polygon points="150,150 260,380 40,380" fill="#8A3A0A"/>
+    <rect x="0" y="350" width="1200" height="50" fill="#C8762A" opacity="0.5"/>
+    <!-- Sphinx silhouette -->
+    <ellipse cx="490" cy="365" rx="60" ry="18" fill="#A05520" opacity="0.6"/>
+    <rect x="450" y="330" width="80" height="35" rx="5" fill="#A05520" opacity="0.6"/>
+    <ellipse cx="535" cy="328" rx="22" ry="18" fill="#A05520" opacity="0.6"/>
+  </svg>
+
+  <div class="hero-eye">𓂀</div>
+  <h1 class="hero-title">Гиза<br>— Чудо Света —</h1>
+  <p class="hero-subtitle">Откройте тайны Древнего Египта</p>
+  <div class="scarab-divider">𓆣 · · · 𓆣</div>
+  <div class="price-badge">
+    <span class="price-label">Цена тура</span>
+    <span class="price-amount">500</span>
+    <span class="price-currency">Египетских фунтов · EGP</span>
+  </div>
+  <button class="cta-btn" onclick="document.getElementById('price').scrollIntoView({behavior:'smooth'})">Забронировать тур</button>
+
+  <div class="scroll-hint">
+    <span>𓀀</span>
+    <span>листайте вниз</span>
+    <span>↓</span>
+  </div>
+</div>
+
+<div class="wave-sep"></div>
+
+<!-- SIGHTS -->
+<section id="sights">
+  <div class="section-glyph">𓃀 𓄿 𓅓 𓆑 𓇯</div>
+  <h2 class="section-title">Великие Достопримечательности</h2>
+  <div class="section-line"></div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon">𓇳</span>
+      <h3 class="card-title">Великая Пирамида Хеопса</h3>
+      <p class="card-text">Единственное из семи чудес Древнего мира, сохранившееся до наших дней. Высота 138 м, возраст — более 4500 лет. Ощутите масштаб истории вплотную.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">𓂀</span>
+      <h3 class="card-title">Великий Сфинкс</h3>
+      <p class="card-text">Колосс с ликом фараона и телом льва охраняет плато Гиза. Монолитная скала длиной 73 метра — страж тысячелетий, хранящий бесчисленные тайны.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">𓋴</span>
+      <h3 class="card-title">Пирамиды Хефрена и Менкаура</h3>
+      <p class="card-text">Второй по величине и самой изящной пирамиды комплекса. Панорама трёх пирамид на закате — незабываемое зрелище, достойное вечности.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">𓆙</span>
+      <h3 class="card-title">Солнечная ладья Хеопса</h3>
+      <p class="card-text">Древнее судно из кедровых досок, захороненное у подножия пирамиды около 2500 г. до н.э. Переправа фараона в загробный мир — реальный артефакт в музее.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">𓏏</span>
+      <h3 class="card-title">Вечернее шоу «Свет и Звук»</h3>
+      <p class="card-text">Под звёздным небом Гизы пирамиды оживают в лазерном спектакле. Голос Сфинкса рассказывает историю цивилизации под музыку тысячелетий.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">𓆣</span>
+      <h3 class="card-title">Базар Хан-эль-Халили</h3>
+      <p class="card-text">Средневековый рынок Каира, где время остановилось. Специи, папирусы, амулеты, украшения и ароматы Востока — погружение в настоящий Египет.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wave-sep" style="transform: scaleX(-1);"></div>
+
+<!-- QUOTE -->
+<div class="quote-block">
+  <p class="quote-text">«Все люди боятся времени, но время боится пирамид»</p>
+  <p class="quote-author">— арабская пословица</p>
+</div>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="section-glyph">𓉐 𓊖 𓌳 𓍯 𓎛</div>
+  <h2 class="section-title">Программа Тура</h2>
+  <div class="section-line"></div>
+
+  <ul class="program-list">
+    <li class="program-item">
+      <span class="program-num">I</span>
+      <div class="program-content">
+        <h3>Утро: Плато Гиза</h3>
+        <p>Встреча с гидом у ворот Гизы. Прогулка вдоль Великой пирамиды Хеопса и осмотр внешних галерей. Фотосессия у Сфинкса с панорамным видом на весь комплекс.</p>
+      </div>
+    </li>
+    <li class="program-item">
+      <span class="program-num">II</span>
+      <div class="program-content">
+        <h3>День: Музей и Ладья Хеопса</h3>
+        <p>Посещение Музея Солнечной ладьи. Осмотр пирамид Хефрена и Менкаура. Панорамная точка для съёмки всех трёх пирамид. Обед в традиционном ресторане.</p>
+      </div>
+    </li>
+    <li class="program-item">
+      <span class="program-num">III</span>
+      <div class="program-content">
+        <h3>Полдень: Прогулка на верблюде</h3>
+        <p>Верблюжья прогулка по пустыне вокруг пирамид — древний способ ощутить масштаб комплекса. Традиционный чай с бедуинами в тени пальм.</p>
+      </div>
+    </li>
+    <li class="program-item">
+      <span class="program-num">IV</span>
+      <div class="program-content">
+        <h3>Вечер: Шоу «Свет и Звук»</h3>
+        <p>Легендарное лазерное шоу у подножия Сфинкса под открытым небом. Многоязычная постановка с историей Египта, которая оживляет древние камни магией света.</p>
+      </div>
+    </li>
+    <li class="program-item">
+      <span class="program-num">V</span>
+      <div class="program-content">
+        <h3>Ночь: Каир — Хан-эль-Халили</h3>
+        <p>Вечерняя прогулка по историческому Каиру. Средневековый базар с мастерскими ювелиров, специями, текстилем и настоящим египетским кофе.</p>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<div class="wave-sep"></div>
+
+<!-- PRICE -->
+<section id="price">
+  <div class="price-section">
+    <div class="section-glyph">𓃭 𓄿 𓅐 𓆎 𓇋</div>
+    <h2 class="section-title">Стоимость Тура</h2>
+    <div class="section-line"></div>
+
+    <div class="price-card">
+      <div class="big-price">500 <span style="font-size:0.45em;opacity:0.7">EGP</span></div>
+      <p class="price-desc">на одного человека · всё включено</p>
+      <ul class="includes-list">
+        <li>Профессиональный гид на русском языке</li>
+        <li>Входные билеты на плато Гиза</li>
+        <li>Верблюжья прогулка по пустыне</li>
+        <li>Билет на шоу «Свет и Звук»</li>
+        <li>Традиционный обед с напитками</li>
+        <li>Трансфер от отеля и обратно</li>
+        <li>Страхование на весь день тура</li>
+      </ul>
+      <button class="cta-btn" style="width:100%; margin-top:0.5rem; font-size:0.85rem;">
+        Забронировать сейчас 𓆣
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-glyphs">𓀀 𓂀 𓆣 𓇳 𓋴</div>
+  <p class="footer-text">𓂀 ЕГИПЕТ · ГИЗА · ПИРАМИДЫ · СФИНКС 𓂀</p>
+  <p class="footer-text" style="margin-top:0.5rem; font-size:0.75rem; opacity:0.3;">Каждый камень здесь — эхо вечности</p>
+</footer>
+
+<script>
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*60}%;
+      --d: ${3 + Math.random()*5}s;
+      --delay: ${Math.random()*6}s;
+      --op: ${0.3 + Math.random()*0.7};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Floating glyphs
+  const glyphs = ['𓂀','𓆣','𓇳','𓋴','𓆙','𓃭','𓏏','𓌳','𓊖','𓉐'];
+  const pEl = document.getElementById('particles');
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = glyphs[Math.floor(Math.random()*glyphs.length)];
+    p.style.cssText = `
+      left: ${5 + Math.random()*90}%;
+      --dur: ${10 + Math.random()*12}s;
+      --delay: ${Math.random()*15}s;
+      font-size: ${0.8 + Math.random()*1.4}rem;
+    `;
+    pEl.appendChild(p);
+  }
+
+  // Intersection observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = el.dataset.delay || 0;
+        setTimeout(() => el.classList.add('visible'), delay);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.card').forEach((el, i) => {
+    el.dataset.delay = i * 100;
+    observer.observe(el);
+  });
+  document.querySelectorAll('.program-item').forEach((el, i) => {
+    el.dataset.delay = i * 120;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
